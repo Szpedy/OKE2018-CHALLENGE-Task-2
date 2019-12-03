@@ -14,4 +14,6 @@ Run following commands
 mvn clean install
 java -jar target/OKEChallenge-x.x.x-SNAPSHOT.jar
 ```
-Your app should now be running on localhost:8080.
+Your app should now be running on [localhost:8080](http://localhost:8080/)
+
+Application is also available on heroku: [Open app](https://oke2018-challenge-task-2.herokuapp.com/)
