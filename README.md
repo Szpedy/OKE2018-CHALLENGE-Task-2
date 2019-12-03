@@ -8,8 +8,7 @@ The task comprises the identification of named entities in sentences and the dis
 ## Running app
 1. Get java 8 jdk and set JAVA_HOME environment variable.
 2. Download maven and add maven to PATH environment variable.
-3. Download code
-Run following commands
+3. Download code and run following commands:
 ```
 mvn clean install
 java -jar target/OKEChallenge-x.x.x-SNAPSHOT.jar
