@@ -13,9 +13,10 @@ public class Pipeline {
      *  - ssplit       - sentence split ("ala ma kota! a ty nie" -> ["ala ma kota!", "a ty nie"])
      *  - pos          - parts of speech ("ala ma kota! a ty nie" -> ["ala ma kota!", "a ty nie"])
      *  - lemma        - lemmatization - approach to getting a proper core of the word in its base from dicts, etc.
+     *  - ner          - named-entity recognizer - annotates words to some recognizable entities
      */
 
-    private static String propertiesName = "tokenize, ssplit, pos, lemma";
+    private static String propertiesName = "tokenize, ssplit, pos, lemma, ner";
     private static StanfordCoreNLP stanfordCoreNLP;
 
     private Pipeline() { }
