@@ -9,7 +9,7 @@ public class AppController {
 
     @PostMapping("/api/result")
     @ResponseBody
-    String result(@RequestParam(value="query", defaultValue="") String query) {
+    public String result(@RequestParam(value="query", defaultValue="") String query) {
         System.out.println(String.format("Query send by client %s", query));
         return "This should be a result of Broader Named Entity Identification and Linking";
     }
