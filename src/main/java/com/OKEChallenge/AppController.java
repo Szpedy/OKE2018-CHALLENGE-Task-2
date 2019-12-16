@@ -14,7 +14,7 @@ public class AppController {
         System.out.println(String.format("Query send by client %s", query));
 
         NamedEntityRecognizer ner = new NamedEntityRecognizer(query);
-        String result = ner.getResult(query);
+        String result = ner.getResult();
         System.out.println(result);
 
         return result;

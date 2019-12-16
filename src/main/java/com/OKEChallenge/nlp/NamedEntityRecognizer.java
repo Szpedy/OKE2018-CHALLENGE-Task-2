@@ -38,7 +38,7 @@ public class NamedEntityRecognizer {
         return token2Ner;
     }
 
-    public String getResult(String query) {
+    public String getResult() {
         StanfordCoreNLP stanfordCoreNLP = Pipeline.getPipeline();
         CoreDocument coreDocument = new CoreDocument(query);
         stanfordCoreNLP.annotate(coreDocument);
