@@ -1,18 +1,20 @@
 
 import React, { Component } from 'react';
+import axios from 'axios';
+
 class TextForm extends Component {
-    handleSubmit = (e) => {
+    handleSubmit = async (e) => {
         e.preventDefault();
         const message = this.getMessage.value;
         const data = {
-            message
+            text: message
         }
-        fetch('/api/result', { method: 'POST', body: message })
-            .then(response => response.text())
-            .then(message => {
-                console.log(message);
-                this.getResult.value = message;
-            });
+        const res = await axios.post('/api/result', { text: message }, {
+            headers: {
+                'Access-Control-Allow-Origin': '*'
+            }
+        })
+        this.getResult.value = res.data;
         this.getMessage.value = '';
     }
     render() {
@@ -23,7 +25,7 @@ class TextForm extends Component {
                     <textarea required rows="5" ref={(input) => this.getMessage = input}
                         cols="28" placeholder="Text to Identify" /><br />
                     <button>Identify</button>
-                <h1 className="post_heading">Result</h1>
+                    <h1 className="post_heading">Result</h1>
                     <textarea rows="10" ref={(input) => this.getResult = input}
                         cols="28" placeholder="Result" />
                 </form>

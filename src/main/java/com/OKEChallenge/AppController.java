@@ -11,12 +11,10 @@ public class AppController {
 
     @PostMapping("/api/result")
     @ResponseBody
-    public String result(@RequestParam(value = "query", defaultValue = "") String query) {
-        System.out.println(String.format("Query send by client %s", query));
-
+    public String result(@RequestBody ClientRequest clientRequest) {
+        System.out.println(String.format("Query send by client %s", clientRequest.getText()));
         NamedEntityRecognizer ner = new NamedEntityRecognizer();
-        Set<String> result = ner.getResult(query);
-
+        Set<String> result = ner.getResult(clientRequest.getText());
         System.out.println("The result is: " + result);
         return String.join(" and", result);
     }
