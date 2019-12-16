@@ -9,33 +9,41 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class NamedEntityRecognizer {
-//    private EntityCategories ec = null;
-//
-//    public NamedEntityRecognizer(final EntityCategories ec) {
-//        this.ec = ec;
-//    }
+    private String query = "";
 
-    private List<String> collectRelevantTokens(List<CoreLabel> tokens) {
-        // TODO: fix this to work with EntityCategories
-        //       + update them to contain all the categories from CoreNLP
-
-        List<String> interestingCategories = Arrays.asList("PERSON", "COUNTRY");
-        return tokens
-                .stream()
-                .filter(token -> interestingCategories.contains(token.get(CoreAnnotations.NamedEntityTagAnnotation.class)))
-                .map(CoreLabel::originalText)
-                .collect(Collectors.toList());
+    public NamedEntityRecognizer(String query) {
+        this.query = query;
     }
 
-    public Set<String> getResult(String query) {
-        HashMap<String, String> result = new HashMap<String, String>();
+    private HashMap<String, String> collectRelevantTokens(List<CoreLabel> tokens) {
+        List<CoreLabel> tokensFiltered = tokens
+                .stream()
+                .filter(token ->
+                        !token.get(
+                                CoreAnnotations.NamedEntityTagAnnotation.class)
+                                .equalsIgnoreCase("O"))
+                .collect(Collectors.toList());
 
+        HashMap<String, String> token2Ner = new HashMap<String, String>();
+
+        for (CoreLabel token : tokensFiltered) {
+            String ner = token.get(CoreAnnotations.NamedEntityTagAnnotation.class);
+            token2Ner.put(token.originalText(), ner.toString());
+            System.out.println(token.originalText() + " its ner: " + ner);
+        }
+
+        System.out.println(tokens);
+        System.out.println(token2Ner);
+
+        return token2Ner;
+    }
+
+    public String getResult() {
         StanfordCoreNLP stanfordCoreNLP = Pipeline.getPipeline();
         CoreDocument coreDocument = new CoreDocument(query);
         stanfordCoreNLP.annotate(coreDocument);
         List<CoreLabel> tokens = coreDocument.tokens();
 
-        return new HashSet<String>(collectRelevantTokens(tokens));
+        return collectRelevantTokens(tokens).toString();
     }
-
 }

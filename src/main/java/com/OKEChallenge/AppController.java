@@ -3,8 +3,7 @@ package com.OKEChallenge;
 import com.OKEChallenge.nlp.NamedEntityRecognizer;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 public class AppController {
@@ -13,10 +12,10 @@ public class AppController {
     @ResponseBody
     public String result(@RequestBody ClientRequest clientRequest) {
         System.out.println(String.format("Query send by client %s", clientRequest.getText()));
-        NamedEntityRecognizer ner = new NamedEntityRecognizer();
-        Set<String> result = ner.getResult(clientRequest.getText());
+        NamedEntityRecognizer ner = new NamedEntityRecognizer(clientRequest.getText());
+        String result = ner.getResult();
         System.out.println("The result is: " + result);
-        return String.join(" and", result);
+        return result;
     }
 
     @GetMapping("/api/hello")
