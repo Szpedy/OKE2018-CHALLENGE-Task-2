@@ -13,7 +13,7 @@ public class AppController {
     public String result(@RequestParam(value = "query", defaultValue = "") String query) {
         System.out.println(String.format("Query send by client %s", query));
 
-        NamedEntityRecognizer ner = new NamedEntityRecognizer();
+        NamedEntityRecognizer ner = new NamedEntityRecognizer(query);
         String result = ner.getResult(query);
         System.out.println(result);
 
