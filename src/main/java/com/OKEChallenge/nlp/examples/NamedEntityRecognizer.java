@@ -10,9 +10,6 @@ import java.util.List;
 
 public class NamedEntityRecognizer {
     public static void main(String[] args) {
-
-
-
         StanfordCoreNLP stanfordCoreNLP = Pipeline.getPipeline();
         String text = "Patrick Romaniack has created this amazingly sophisticated app for the OKE Challenge! " +
                 "I am Albert and we're friends living in Poznań.";
