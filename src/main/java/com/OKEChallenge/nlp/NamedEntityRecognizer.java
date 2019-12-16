@@ -5,21 +5,37 @@ import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class NamedEntityRecognizer {
-    public static void main(String[] args) {
-        StanfordCoreNLP stanfordCoreNLP = Pipeline.getPipeline();
-        String text = "Patrick Romaniack has created this amazingly sophisticated app for the OKE Challenge! " +
-                "I am Albert and we're friends living in Poznań.";
+//    private EntityCategories ec = null;
+//
+//    public NamedEntityRecognizer(final EntityCategories ec) {
+//        this.ec = ec;
+//    }
 
-        CoreDocument coreDocument = new CoreDocument(text);
-        stanfordCoreNLP.annotate(coreDocument);
-        List<CoreLabel> coreLabelList = coreDocument.tokens();
+    private List<String> collectRelevantTokens(List<CoreLabel> tokens) {
+        // TODO: fix this to work with EntityCategories
+        //       + update them to contain all the categories from CoreNLP
 
-        for (CoreLabel label : coreLabelList) {
-            String ner = label.get(CoreAnnotations.NamedEntityTagAnnotation.class);
-            System.out.println(label.originalText() + " its ner: " + ner);
-        }
+        List<String> interestingCategories = Arrays.asList("PERSON", "COUNTRY");
+        return tokens
+                .stream()
+                .filter(token -> interestingCategories.contains(token.get(CoreAnnotations.NamedEntityTagAnnotation.class)))
+                .map(CoreLabel::originalText)
+                .collect(Collectors.toList());
     }
+
+    public Set<String> getResult(String query) {
+        HashMap<String, String> result = new HashMap<String, String>();
+
+        StanfordCoreNLP stanfordCoreNLP = Pipeline.getPipeline();
+        CoreDocument coreDocument = new CoreDocument(query);
+        stanfordCoreNLP.annotate(coreDocument);
+        List<CoreLabel> tokens = coreDocument.tokens();
+
+        return new HashSet<String>(collectRelevantTokens(tokens));
+    }
+
 }
