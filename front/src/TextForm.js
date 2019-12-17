@@ -6,11 +6,9 @@ class TextForm extends Component {
     handleSubmit = async (e) => {
         e.preventDefault();
         const message = this.getMessage.value;
-        const data = {
-            text: message
-        }
         const res = await axios.post('/api/result', { text: message }, {
             headers: {
+                'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*'
             }
         })
