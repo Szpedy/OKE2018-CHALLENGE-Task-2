@@ -22,8 +22,11 @@ public class SparqlQueryTest {
     @Test
     public void FbiShouldBeOrganization() {
         SparqlQuery sparqlQuery = new SparqlQuery();
-        List<String> types = sparqlQuery.executeQuery("Cia");
-        types.forEach(System.out::println);
+        List<Map<String, String>> types = sparqlQuery.executeQuery("Cia");
+        for (Map<String, String> row : types) {
+            System.out.println(row.keySet());
+            System.out.println(row.values());
+        }
         // Cia resource redirects to http://dbpedia.org/page/Central_Intelligence_Agency
         // Cia resource does not have type. Type is available after redirection
         // SELECT * WHERE {

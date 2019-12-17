@@ -1,7 +1,6 @@
 package com.OKEChallenge;
 
 import org.apache.jena.query.*;
-import org.apache.jena.rdf.model.RDFNode;
 
 import java.util.HashMap;
 import java.util.LinkedList;
