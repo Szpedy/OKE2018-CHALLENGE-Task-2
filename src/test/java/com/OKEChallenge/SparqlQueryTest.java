@@ -15,5 +15,6 @@ public class SparqlQueryTest {
             System.out.println(row.keySet());
             System.out.println(row.values());
         }
+        assert (types.get(0).get("Label").equals("person"));
     }
 }

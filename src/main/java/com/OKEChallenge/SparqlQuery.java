@@ -22,7 +22,7 @@ public class SparqlQuery {
 
     /**
      * Query that returns type uri and label of the resource
-     * */
+     */
     private String getQueryStr(String resource) {
         return PREFIXES + "select distinct ?type ?label {\n" +
                 "   res:" + resource + " rdf:type ?type.\n" +
@@ -46,7 +46,7 @@ public class SparqlQuery {
         while (results.hasNext()) {
             HashMap<String, String> row = new HashMap<>();
             QuerySolution qSolution = results.nextSolution();
-            row.put("Label",  qSolution.get("label").toString().replace("@en", ""));
+            row.put("Label", qSolution.get("label").toString().replace("@en", ""));
             row.put("Type Uri", qSolution.get("type").toString());
             row.put("Resource Uri", "http://dbpedia.org/resource/" + resource);
             types.add(row);
