@@ -3,14 +3,17 @@ package com.OKEChallenge;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Map;
 
 public class SparqlQueryTest {
 
     @Test
     public void donaldTrumpShouldBePerson() {
         SparqlQuery sparqlQuery = new SparqlQuery();
-        List<String> types = sparqlQuery.executeQuery("Donald_Trump");
-        types.forEach(System.out::println);
-        assert ( types.get(0).equals("person"));
+        List<Map<String, String>> types = sparqlQuery.executeQuery("Donald_Trump");
+        for (Map<String, String> row : types) {
+            System.out.println(row.keySet());
+            System.out.println(row.values());
+        }
     }
 }

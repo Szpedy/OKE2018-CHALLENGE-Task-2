@@ -3,8 +3,10 @@ package com.OKEChallenge;
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.RDFNode;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class SparqlQuery {
     private static final String ENDPOINT = "https://dbpedia.org/sparql";
@@ -36,15 +38,18 @@ public class SparqlQuery {
      * @param resource eg. Donald_Trump all white spaces should be an underscore
      * @return list of types from db
      */
-    public List<String> executeQuery(String resource) {
-        List<String> types = new LinkedList<>();
+    public List<Map<String, String>> executeQuery(String resource) {
+        List<Map<String, String>> types = new LinkedList<>();
         Query query = QueryFactory.create(getQueryStr(resource));
         QueryExecution exec = QueryExecutionFactory.sparqlService(ENDPOINT, query);
         ResultSet results = exec.execSelect();
         while (results.hasNext()) {
+            HashMap<String, String> row = new HashMap<>();
             QuerySolution qSolution = results.nextSolution();
-            RDFNode rdfNode = qSolution.get("label");
-            types.add(rdfNode.toString().replace("@en", ""));
+            row.put("Label",  qSolution.get("label").toString().replace("@en", ""));
+            row.put("Type Uri", qSolution.get("type").toString());
+            row.put("Resource Uri", "http://dbpedia.org/resource/" + resource);
+            types.add(row);
         }
         return types;
     }
