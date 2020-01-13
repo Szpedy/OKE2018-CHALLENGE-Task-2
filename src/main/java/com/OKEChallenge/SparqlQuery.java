@@ -22,7 +22,8 @@ public class SparqlQuery {
     /**
      * Query that returns type uri and label of the resource
      */
-    private String getQueryStr(String resource) {
+    @Deprecated
+    private String _getQueryStr(String resource) {
         return PREFIXES + "select distinct ?type ?label {\n" +
                 "   res:" + resource + " rdf:type ?type.\n" +
                 "   ?type rdfs:label ?label .\n" +
@@ -32,24 +33,46 @@ public class SparqlQuery {
     }
 
     /**
+     * Query that returns type uri and label of the resource
+     */
+    private static String getQueryStr(String resource) {
+        return PREFIXES + " SELECT distinct * WHERE {\n" +
+                "  OPTIONAL { res:" + resource + " dbo:wikiPageRedirects ?redirectsTo.\n" +
+                "             ?redirectsTo rdf:type ?type. \n" +
+                "             ?type rdfs:label ?label .\n" +
+                "             filter(langMatches(lang(?label),\"EN\") && REGEX ( STR (?type), \"http://dbpedia.org/ontology/\", \"i\" ) )\n" +
+                "}\n" +
+                "  OPTIONAL { res:" + resource + " rdf:type ?type.\n" +
+                "             ?type rdfs:label ?label .\n" +
+                "             filter(langMatches(lang(?label),\"EN\") && REGEX ( STR (?type), \"http://dbpedia.org/ontology/\", \"i\" ) )\n" +
+                "           }\n" +
+                "}\n" +
+                "LIMIT 10";
+    }
+
+
+    /**
      * Sparql query executor
      *
      * @param resource eg. Donald_Trump all white spaces should be an underscore
      * @return list of types from db
      */
-    public List<Map<String, String>> executeQuery(String resource) {
-        List<Map<String, String>> types = new LinkedList<>();
+
+    public static List<Map<String, String>> executeQuery(String resource) {
+        List<Map<String, String>> results = new LinkedList<>();
         Query query = QueryFactory.create(getQueryStr(resource));
         QueryExecution exec = QueryExecutionFactory.sparqlService(ENDPOINT, query);
-        ResultSet results = exec.execSelect();
-        while (results.hasNext()) {
+        ResultSet rs = exec.execSelect();
+        while (rs.hasNext()) {
             HashMap<String, String> row = new HashMap<>();
-            QuerySolution qSolution = results.nextSolution();
-            row.put("Label", qSolution.get("label").toString().replace("@en", ""));
-            row.put("Type Uri", qSolution.get("type").toString());
-            row.put("Resource Uri", "http://dbpedia.org/resource/" + resource);
-            types.add(row);
+            QuerySolution qSolution = rs.nextSolution();
+            if (qSolution.get("label") != null) {
+                row.put("Label", qSolution.get("label").toString().replace("@en", ""));
+                row.put("Type Uri", qSolution.get("type").toString());
+                row.put("Resource Uri", "http://dbpedia.org/resource/" + resource);
+                results.add(row);
+            }
         }
-        return types;
+        return results;
     }
 }
