@@ -8,6 +8,9 @@ import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 public class NamedEntityRecognizer {
     private String query = "";
 
@@ -15,7 +18,7 @@ public class NamedEntityRecognizer {
         this.query = query;
     }
 
-    private HashMap<String, String> collectRelevantTokens(List<CoreLabel> tokens) {
+    private String collectRelevantTokens(List<CoreLabel> tokens) {
         List<CoreLabel> tokensFiltered = tokens
                 .stream()
                 .filter(token ->
@@ -32,10 +35,16 @@ public class NamedEntityRecognizer {
             System.out.println(token.originalText() + " its ner: " + ner);
         }
 
+        GsonBuilder gsonMapBuilder = new GsonBuilder();
+ 
+		Gson gsonObject = gsonMapBuilder.create();
+ 
+		String JSONObject = gsonObject.toJson(token2Ner);
+		System.out.println("\nMethod-1: Using Google GSON ==> " + JSONObject);
         System.out.println(tokens);
         System.out.println(token2Ner);
 
-        return token2Ner;
+        return JSONObject;
     }
 
     public String getResult() {
