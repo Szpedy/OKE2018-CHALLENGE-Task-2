@@ -21,6 +21,7 @@ class TextForm extends Component {
         this.state.loading = true;
         const res = await axios.post('/api/result', { text: message }, {
             headers: {
+                'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*'
             }
         })
@@ -48,7 +49,9 @@ class TextForm extends Component {
                 console.log(this.state.resultMap[splited[i]]);
                 this.state.text += `<mark data-entity=\"${this.state.resultMap[splited[i]].toLowerCase()}\">${splited[i]}</mark> `
             }
-            this.state.text += `${splited[i]} `
+            else{
+                this.state.text += `${splited[i]} `
+            }
         }
         console.log('this.state.text')
         console.log(this.state.text)
@@ -60,9 +63,12 @@ class TextForm extends Component {
             <div className="post-container">
                 <h1 className="post_heading">Input Text</h1>
                 <form className="form" onSubmit={this.handleSubmit} >
-                    <textarea required rows="5" ref={(input) => this.getMessage = input}
+                    <textarea  required rows="5" ref={(input) => this.getMessage = input}
                         cols="28" placeholder="Text to Identify" /><br />
+                        <br />
                     <button>Identify</button>
+                    <br />
+                    <br />
                     {/* <h1 className="post_heading">Result</h1>
                     <textarea rows="10" ref={(input) => this.getResult = input}
                         cols="28" placeholder="Result" /> */}
