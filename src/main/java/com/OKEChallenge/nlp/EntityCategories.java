@@ -4,7 +4,12 @@ public enum EntityCategories {
     PERSON("Person"),
     CITY("City"),
     LOCATION("Location"),
-    COUNTRY("Country");
+    COUNTRY("Country"),
+    TITLE("Title"),
+    ORGANIZATION("Organizaion"),
+    DATE("Date"),
+    MONEY("Money"),
+    PERCENT("Percent");
 
     private String cat = "";
     EntityCategories(String cat) {

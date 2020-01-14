@@ -1,12 +1,10 @@
 package com.OKEChallenge.nlp;
 
-import edu.stanford.nlp.ling.CoreAnnotations;
-import edu.stanford.nlp.pipeline.Annotation;
-import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 import edu.stanford.nlp.trees.Constituent;
 import edu.stanford.nlp.trees.LabeledScoredConstituentFactory;
 import edu.stanford.nlp.trees.Tree;
 import edu.stanford.nlp.trees.TreeCoreAnnotations;
+import edu.stanford.nlp.util.CoreMap;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -17,12 +15,9 @@ import java.util.stream.Stream;
 
 public class NounPhraseExtractor {
 
-    public List<String> getNpsFromText(String sentence) {
+    public List<String> getNpsFromText(CoreMap sen) {
         List<String> nounPhrases = new LinkedList<>();
-        StanfordCoreNLP stanfordCoreNLP = Pipeline.getPipeline();
-        Annotation annotation = new Annotation(sentence);
-        stanfordCoreNLP.annotate(annotation);
-        Tree tree = annotation.get(CoreAnnotations.SentencesAnnotation.class).get(0).get(TreeCoreAnnotations.TreeAnnotation.class);
+        Tree tree = sen.get(TreeCoreAnnotations.TreeAnnotation.class);
         Set<Constituent> treeConstituents = tree.constituents(new LabeledScoredConstituentFactory());
         System.out.println(tree);
         for (Constituent constituent : treeConstituents) {
@@ -43,9 +38,15 @@ public class NounPhraseExtractor {
     }
 
     private String removeStopWords(String sentence) {
-        ArrayList<String> allWords = Stream.of(sentence.split(" "))
+        ArrayList<String> allWords = Stream
+                .of(sentence.split(" "))
                 .collect(Collectors.toCollection(ArrayList::new));
-        allWords.removeAll(Pipeline.stopwords);
+
+        for (int i = 0; i < allWords.size(); i++) {
+            if (Pipeline.stopwords.contains(allWords.get(i).toLowerCase())){
+                allWords.remove(allWords.get(i));
+            }
+        }
         return String.join(" ", allWords);
     }
 

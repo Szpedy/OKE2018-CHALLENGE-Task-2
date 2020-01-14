@@ -50,7 +50,6 @@ public class SparqlQuery {
                 "LIMIT 10";
     }
 
-
     /**
      * Sparql query executor
      *

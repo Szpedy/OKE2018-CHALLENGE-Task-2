@@ -1,8 +1,9 @@
 package com.OKEChallenge;
 
+import com.OKEChallenge.nlp.NamedEntityRecognizer;
 import com.OKEChallenge.nlp.NounPhraseExtractor;
 import com.OKEChallenge.nlp.Pipeline;
-import edu.stanford.nlp.pipeline.Annotation;
+import com.OKEChallenge.nlp.SentenceRecognizer;
 import org.junit.Test;
 
 import java.util.LinkedList;
@@ -13,14 +14,18 @@ public class NounPhrasesTest {
 
     @Test
     public void nounPhraseOfString() {
-        Annotation annotation = new Annotation("Donald Trump");
-        Pipeline.getPipeline().annotate(annotation);
+        Pipeline.getPipeline();
         NounPhraseExtractor nounPhraseExtractor = new NounPhraseExtractor();
-        List<String> nps = nounPhraseExtractor.getNpsFromText("Donald Trump is a president of the united states");
+        NamedEntityRecognizer ner = new NamedEntityRecognizer();
+        ner.getResult("Donald Trump is a president of the United States");
+        SentenceRecognizer sr = new SentenceRecognizer();
+        List<String> nps = nounPhraseExtractor.getNpsFromText(sr.getSentences("Donald Trump is a president of the United States").get(0));
         List<Map<String, String>> results = new LinkedList<>();
         nps.stream()
                 .filter(np -> !np.isEmpty())
                 .forEach(np -> results.addAll(SparqlQuery.executeQuery(np.replace(" ", "_"))));
+
+        nps.forEach(System.out::println);
         for (Map<String, String> result : results) {
             System.out.println(result.entrySet());
         }
