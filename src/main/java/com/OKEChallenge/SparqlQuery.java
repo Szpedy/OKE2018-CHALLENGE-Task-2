@@ -59,6 +59,7 @@ public class SparqlQuery {
 
     public static List<Map<String, String>> executeQuery(String resource) {
         List<Map<String, String>> results = new LinkedList<>();
+        resource = resource.replace(" ", "_");
         Query query = QueryFactory.create(getQueryStr(resource));
         QueryExecution exec = QueryExecutionFactory.sparqlService(ENDPOINT, query);
         ResultSet rs = exec.execSelect();

@@ -35,18 +35,21 @@ class TextForm extends Component {
 
     createText = () => {
         this.state.text = "";
-        let keys = Object.keys(this.state.resultMap);
-        console.log('keys');
-        console.log(keys);
-        console.log('this.state.resultMap');
-        console.log(this.state.resultMap);
         // Outer loop to create parent
         //Inner loop to create children
-        for (let i = 0; i < keys.length; i++) {
-            let key = keys[i];
-            let value = this.state.resultMap[key]
-            if (value != "O") {
-                this.state.text += `<mark data-entity=\"${value.toLowerCase()}\">${key}</mark> `
+        for (let i = 0; i < this.state.resultMap.length; i++) {
+            let entityData = this.state.resultMap[i];
+            try {
+                var href = entityData.dbpediaMapping[0]["Resource Uri"];
+            } catch (error) {
+                href = undefined;
+            }
+            console.log(href);
+            console.log(entityData);
+            if (href) {
+                this.state.text += `<mark data-entity=\"${entityData.entityType.toLowerCase()}\"><a href="${href}">${entityData.entity}</a></mark> `
+            } else{
+            this.state.text += `<mark data-entity=\"${entityData.entityType.toLowerCase()}\">${entityData.entity}</mark> `
             }
         }
         console.log('this.state.text')

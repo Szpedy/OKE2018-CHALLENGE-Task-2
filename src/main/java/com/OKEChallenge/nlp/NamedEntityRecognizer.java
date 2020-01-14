@@ -1,12 +1,15 @@
 package com.OKEChallenge.nlp;
 
+import com.OKEChallenge.SparqlQuery;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 
+import javax.json.Json;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -37,8 +40,8 @@ public class NamedEntityRecognizer {
         return JSONObject;
     }
 
-    public HashMap<String, String> collectTokens(List<CoreLabel> tokens) {
-        HashMap<String, String> token2Ner = new HashMap<>();
+    public List<NamedEntityData> collectTokens(List<CoreLabel> tokens) {
+        List<NamedEntityData> results = new LinkedList<>();
         String currentEntityType = "";
         String oldEntityType = "";
         StringBuilder result = new StringBuilder();
@@ -49,14 +52,24 @@ public class NamedEntityRecognizer {
                 oldEntityType = currentEntityType;
             }
             if (!currentEntityType.equals(oldEntityType)) {
-                token2Ner.put(result.toString().trim(), oldEntityType);
+                String entity = result.toString().trim();
+                NamedEntityData ned = new NamedEntityData(entity, oldEntityType, SparqlQuery.executeQuery(entity));
                 oldEntityType = currentEntityType;
                 result = new StringBuilder();
+                if (!ned.entityType.equals("O")) {
+                    results.add(ned);
+                }
             }
             result.append(token.originalText()).append(" ");
         }
-        token2Ner.put(result.toString().trim(), currentEntityType);
-        return token2Ner;
+
+        // Add last entity
+        String entity = result.toString().trim();
+        NamedEntityData ned = new NamedEntityData(entity, currentEntityType, SparqlQuery.executeQuery(entity));
+        if (!ned.entityType.equals("O")) {
+            results.add(ned);
+        }
+        return results;
     }
 
     public String getResult(String query) {
@@ -67,7 +80,7 @@ public class NamedEntityRecognizer {
         return collectRelevantTokens(tokens);
     }
 
-    public HashMap<String, String> getResultsAsMap(String query) {
+    public List<NamedEntityData> getResultsAsMap(String query) {
         StanfordCoreNLP stanfordCoreNLP = Pipeline.getPipeline();
         CoreDocument coreDocument = new CoreDocument(query);
         stanfordCoreNLP.annotate(coreDocument);

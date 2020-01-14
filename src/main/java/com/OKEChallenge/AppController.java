@@ -1,5 +1,6 @@
 package com.OKEChallenge;
 
+import com.OKEChallenge.nlp.NamedEntityData;
 import com.OKEChallenge.nlp.NamedEntityRecognizer;
 import com.OKEChallenge.nlp.NounPhraseExtractor;
 import com.OKEChallenge.nlp.SentenceRecognizer;
@@ -21,7 +22,7 @@ public class AppController {
     @PostMapping("/api/result")
     @ResponseBody
     public String result(@RequestBody ClientRequest clientRequest) {
-        Map<String, String> allResults = new HashMap<>();
+        List<NamedEntityData> allResults = new LinkedList<>();
         String clientText = clientRequest.getText();
         System.out.println(String.format("Query send by client %s", clientText));
 
@@ -29,10 +30,8 @@ public class AppController {
         List<CoreMap> sentences = sr.getSentences(clientText);
         GsonBuilder gsonMapBuilder = new GsonBuilder();
         Gson gsonObject = gsonMapBuilder.create();
-        sentences.forEach(sentence -> npe.getNpsFromText(sentence).forEach(np -> allResults.putAll(ner.getResultsAsMap(np))));
+        sentences.forEach(sentence -> npe.getNpsFromText(sentence).forEach(np -> allResults.addAll(ner.getResultsAsMap(np))));
         System.out.println("Result from getMap:" + allResults.toString());
-//        String result = ner.getResult(clientText);
-//        System.out.println("The result is: " + result);
         return gsonObject.toJson(allResults);
     }
 
