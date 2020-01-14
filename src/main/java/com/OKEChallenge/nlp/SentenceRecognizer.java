@@ -13,7 +13,6 @@ public class SentenceRecognizer {
         StanfordCoreNLP stanfordCoreNLP = Pipeline.getPipeline();
         Annotation document = new Annotation(text);
         stanfordCoreNLP.annotate(document);
-        List<CoreMap> sentences = document.get(CoreAnnotations.SentencesAnnotation.class);
-        return sentences;
+        return document.get(CoreAnnotations.SentencesAnnotation.class);
     }
 }

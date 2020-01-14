@@ -34,7 +34,8 @@ class TextForm extends Component {
     }
 
     createText = () => {
-        let splited = this.getMessage.value.split(" ");
+        this.state.text = "";
+        let splited = Object.keys(this.state.resultMap);
         console.log('splited');
         console.log(splited);
         console.log('this.state.resultMap');
