@@ -1,5 +1,7 @@
 package com.OKEChallenge.nlp;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.pipeline.CoreDocument;
@@ -7,9 +9,6 @@ import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 
 import java.util.*;
 import java.util.stream.Collectors;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 public class NamedEntityRecognizer {
 
