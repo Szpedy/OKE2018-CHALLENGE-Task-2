@@ -9,7 +9,7 @@ class TextForm extends Component {
         this.state = {
             resultMap: '',
             text: '',
-            loading:false
+            loading: false
         }
     }
     handleSubmit = async (e) => {
@@ -35,23 +35,18 @@ class TextForm extends Component {
 
     createText = () => {
         this.state.text = "";
-        let splited = Object.keys(this.state.resultMap);
-        console.log('splited');
-        console.log(splited);
+        let keys = Object.keys(this.state.resultMap);
+        console.log('keys');
+        console.log(keys);
         console.log('this.state.resultMap');
         console.log(this.state.resultMap);
         // Outer loop to create parent
         //Inner loop to create children
-        for (let i = 0; i < splited.length; i++) {
-            if (splited[i] in this.state.resultMap) {
-                console.log('splited[i]');
-                console.log(splited[i]);
-                console.log('this.state.resultMap[splited[i]]');
-                console.log(this.state.resultMap[splited[i]]);
-                this.state.text += `<mark data-entity=\"${this.state.resultMap[splited[i]].toLowerCase()}\">${splited[i]}</mark> `
-            }
-            else{
-                this.state.text += `${splited[i]} `
+        for (let i = 0; i < keys.length; i++) {
+            let key = keys[i];
+            let value = this.state.resultMap[key]
+            if (value != "O") {
+                this.state.text += `<mark data-entity=\"${value.toLowerCase()}\">${key}</mark> `
             }
         }
         console.log('this.state.text')
@@ -64,9 +59,9 @@ class TextForm extends Component {
             <div className="post-container">
                 <h1 className="post_heading">Input Text</h1>
                 <form className="form" onSubmit={this.handleSubmit} >
-                    <textarea  required rows="5" ref={(input) => this.getMessage = input}
+                    <textarea required rows="5" ref={(input) => this.getMessage = input}
                         cols="28" placeholder="Text to Identify" /><br />
-                        <br />
+                    <br />
                     <button>Identify</button>
                     <br />
                     <br />
