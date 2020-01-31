@@ -6,10 +6,7 @@ import edu.stanford.nlp.trees.Tree;
 import edu.stanford.nlp.trees.TreeCoreAnnotations;
 import edu.stanford.nlp.util.CoreMap;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -26,7 +23,7 @@ public class NounPhraseExtractor {
                 nounPhrases.add(removeStopWords(nounPhrase));
             }
         }
-        return nounPhrases;
+        return new ArrayList<>(new HashSet<>(nounPhrases));
     }
 
     private String getStringFromTreeList(List<Tree> treeList) {
